@@ -1,0 +1,3 @@
+[submodule "MCL.ahk"]
+	path = MCL.ahk
+	url = https://github.com/G33kDude/MCL.ahk.git
