@@ -1,19 +1,15 @@
-#NoEnv
-SetBatchLines, -1
+#Include shared.ahk
 
-#Include MCL.ahk\MCL.ahk
-
-MCL.CompilerPrefix := "/usr/bin/x86_64-w64-mingw32-"
-MCL.CompilerSuffix := ""
-
-part1 =
+c =
 ( %
 
+#define UNICODE
+
+#include <mcl.h>
 #include "ahk.h"
 
-int SavedValue = 10;
-
-int __main(Object *pobjIn) {
+MCL_EXPORT(part1);
+int part1(Object *pobjIn) {
 
 	Field *pField = pobjIn->pFields;
 	int last = pField->iValue;
@@ -30,18 +26,10 @@ int __main(Object *pobjIn) {
 	return count;
 }
 
-)
+#define iValue(o, i) (o->pFields[i].iValue)
 
-part2 =
-( %
-
-#include "ahk.h"
-
-#define iValue(o, i) (((Field*)(o->pFields + i))->iValue)
-
-int SavedValue = 10;
-
-int __main(Object *pobjIn) {
+MCL_EXPORT(part2);
+int part2(Object *pobjIn) {
 	int last = iValue(pobjIn, 0) + iValue(pobjIn, 1) + iValue(pobjIn, 2);
 
 	int count = 0;
@@ -58,10 +46,15 @@ int __main(Object *pobjIn) {
 
 )
 
-obj := StrSplit(RTrim(FileOpen("input1.txt", "r").Read(), "`r`n"), "`n", "`r")
-for k, v in obj
-	obj[k] := v+0
+lib := MCL.FromC(c)
 
-MsgBox, % DllCall(MCL.FromC(part1), "Ptr", &obj, "CDecl Int")
-MsgBox, % DllCall(MCL.FromC(part2), "Ptr", &obj, "CDecl Int")
+input := FileOpen(A_ScriptDir "\input1.txt", "r").Read()
+input := RTrim(input, "`r`n") ; Remove trailing newlines
+input := StrSplit(input, "`n", "`r") ; Split input on newline
 
+; Numerify all values
+for k, v in input
+	input[k] := v+0
+
+MsgBox, % DllCall(lib.part1, "Ptr", &input, "CDecl Int")
+MsgBox, % DllCall(lib.part2, "Ptr", &input, "CDecl Int")
