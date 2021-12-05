@@ -103,6 +103,29 @@ BOOL boardWins(Object *board, Object *numbers, int called_number_index) {
 	return false;
 }
 
+MCL_EXPORT(part1);
+TCHAR part1(Object *boards, Object *numbers) {
+	// Call each number in order
+	for (int called_number_index = 0; called_number_index < numbers->cFields; called_number_index++) {
+
+		// For all boards
+		for (int board_index = 0; board_index < boards->cFields; board_index++) {
+			Object* board = boards->pFields[board_index].pobjValue;
+
+			// If the board is in a win condition
+			if (boardWins(board, numbers, called_number_index)) {
+
+				// Calculate and return the puzzle solution
+				int winning_number = numbers->pFields[called_number_index].iValue;
+				int uncalleds_sum = uncalledsSum(board, numbers, called_number_index);
+				return winning_number * uncalleds_sum;
+			}
+		}
+	}
+
+	return -1;
+}
+
 MCL_EXPORT(part2);
 TCHAR part2(Object *boards, Object *numbers, Object *board_win_order) {
 	int winning_board_count = 0; // How many boards have won?

@@ -1,10 +1,4 @@
-#NoEnv
-SetBatchLines, -1
-
-#Include MCL.ahk\MCL.ahk
-
-MCL.CompilerPrefix := "/usr/bin/x86_64-w64-mingw32-"
-MCL.CompilerSuffix := ""
+#Include shared.ahk
 
 lib := MCL.FromC(FileOpen(A_ScriptDir "\aoc4.c", "r").Read())
 
@@ -40,5 +34,6 @@ for board_index, board in input
 	}
 }
 
+MsgBox, % DllCall(lib.part1, "Ptr", &boards, "Ptr", &numbers, "CDecl Int")
 MsgBox, % DllCall(lib.part2, "Ptr", &boards, "Ptr", &numbers, "Ptr", &board_win_order, "CDecl Int")
 
