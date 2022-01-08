@@ -13,5 +13,5 @@ loop, parse, input, `n, `r
 }
 
 MsgBox, % DllCall(lib.part1, "Ptr", &rows, "CDecl Ptr")
-; MsgBox, % DllCall(lib.part2, "Ptr", &rows, "CDecl Ptr")
+MsgBox, % DllCall(lib.part2, "Ptr", &rows, "CDecl Ptr")
 
